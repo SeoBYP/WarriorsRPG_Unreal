@@ -10,6 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "WarriorHeroCharacter.generated.h"
 
+class UHeroCombatComponent;
 class USpringArmComponent;
 class UCameraComponent;
 class UDataAsset_InputConfig;
@@ -40,8 +41,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,category="Camera",meta=(AllowPrivateAccess="true"))
 	UCameraComponent* FollowCamera;
-	
-	
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,category="Combat",meta=(AllowPrivateAccess="true"))
+	UHeroCombatComponent* HeroCombatComponent;
 #pragma endregion
 
 #pragma region Inputs
@@ -51,12 +53,13 @@ protected:
 	void Input_Move(const FInputActionValue& InputActionValue);
 
 	void Input_Look(const FInputActionValue& InputActionValue);
+
+	void Input_AbilityInputPressed(FGameplayTag InInputTag);
+	void Input_AbilityInputRealesed(FGameplayTag InInputTag);
 #pragma endregion 
-
-	
 public:
-
-	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	FORCEINLINE UHeroCombatComponent* GetHeroCombatComponent() const { return HeroCombatComponent; }
 };

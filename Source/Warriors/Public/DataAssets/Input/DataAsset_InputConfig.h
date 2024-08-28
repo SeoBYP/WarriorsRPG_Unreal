@@ -23,6 +23,11 @@ public:
 	/** 유저 InputTag에 매칠될 InputAction(마우스, 키보드 입력 등)*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputAction;
+
+	bool IsVailed() const
+	{
+		return InputTag.IsValid() && InputAction;
+	}
 };
 
 
@@ -42,4 +47,8 @@ public:
 	TArray<FWarriorInputActionConfig> NativeInputActions;
 
 	UInputAction* FindNativeInputActionByTag(const FGameplayTag& InInputTag) const;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(TitleProperty = "InputTag"))
+	TArray<FWarriorInputActionConfig> AbilityInputActions;
+
 };

@@ -13,5 +13,7 @@ UCLASS()
 class WARRIORS_API UWarriorsAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
-	
+public:
+	void OnAbilityInputPressed(const FGameplayTag& InInputTag);
+	void OnAbilityInputRealesed(const FGameplayTag& InInputTag);
 };

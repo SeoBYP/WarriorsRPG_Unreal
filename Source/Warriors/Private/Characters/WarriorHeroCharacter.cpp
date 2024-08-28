@@ -11,10 +11,10 @@
 #include "Warriors/Public/DataAssets/Input/DataAsset_InputConfig.h"
 #include "Warriors/Public/Utils/WarriorGameplayTags.h"
 #include "InputActionValue.h"
+#include "GameplayTagContainer.h"
 #include "AbilitySystem/WarriorsAbilitySystemComponent.h"
 #include "DataAssets/StartUpData/DataAsset_HeroStartUpData.h"
-
-#include "Warriors/Public/WarriorDebugHelper.h"
+#include "Components/Combat/HeroCombatComponent.h"
 
 
 // Sets default values
@@ -40,6 +40,9 @@ AWarriorHeroCharacter::AWarriorHeroCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.f,500.f,0.f);
 	GetCharacterMovement()->MaxWalkSpeed = 400.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.0f;
+
+	HeroCombatComponent = CreateDefaultSubobject<UHeroCombatComponent>(TEXT("HeroCombatComponent"));
+	
 }
 
 void AWarriorHeroCharacter::PossessedBy(AController* NewController)
@@ -73,6 +76,9 @@ void AWarriorHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataConfig,WarriorsGameplayTags::InputTag_Move,ETriggerEvent::Triggered,this,&AWarriorHeroCharacter::Input_Move);
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataConfig,WarriorsGameplayTags::InputTag_Look,ETriggerEvent::Triggered,this,&AWarriorHeroCharacter::Input_Look);
+	
+	WarriorInputComponent->BindAbilityInputAction(InputConfigDataConfig,this,&ThisClass::Input_AbilityInputPressed,&AWarriorHeroCharacter::Input_AbilityInputRealesed);
+
 }
 
 // Called when the game starts or when spawned
@@ -114,6 +120,16 @@ void AWarriorHeroCharacter::Input_Look(const FInputActionValue& InputActionValue
 	{
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AWarriorHeroCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag)
+{
+	WarriorsAbilitySystemComponent->OnAbilityInputPressed(InInputTag);
+}
+
+void AWarriorHeroCharacter::Input_AbilityInputRealesed(FGameplayTag InInputTag)
+{
+	WarriorsAbilitySystemComponent->OnAbilityInputRealesed(InInputTag);
 }
 
 // Called every frame

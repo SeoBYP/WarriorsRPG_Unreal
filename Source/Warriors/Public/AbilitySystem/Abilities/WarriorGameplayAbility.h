@@ -6,6 +6,9 @@
 #include "Abilities/GameplayAbility.h"
 #include "WarriorGameplayAbility.generated.h"
 
+class UPawnCombatComponent;
+class UWarriorsAbilitySystemComponent;
+
 UENUM(BlueprintType)
 enum class EWarriorAbilityActivationPolicy : uint8
 {
@@ -30,4 +33,10 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly,Category="WarriorAbilities")
 	EWarriorAbilityActivationPolicy AbilityActivationPoliby = EWarriorAbilityActivationPolicy::OnTriggered;
+
+	UFUNCTION(BlueprintPure,Category="Warrior|Abilities")
+	UPawnCombatComponent* GetPawnCombatComponentFromActorInfo() const;
+
+	UFUNCTION(BlueprintPure,Category="Warrior|Abilities")
+	UWarriorsAbilitySystemComponent* GetWarriorsAbilitySystemComponentFromActorInfo() const;
 };

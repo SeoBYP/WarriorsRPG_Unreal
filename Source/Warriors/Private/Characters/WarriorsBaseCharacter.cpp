@@ -17,7 +17,6 @@ AWarriorsBaseCharacter::AWarriorsBaseCharacter()
 	WarriorsAbilitySystemComponent = CreateDefaultSubobject<UWarriorsAbilitySystemComponent>(TEXT("WarriorsAbilitySystemComponent"));
 
 	WarriorAttributeSet = CreateDefaultSubobject<UWarriorAttributeSet>(TEXT("WarriorAttributeSet"));
-
 }
 
 UAbilitySystemComponent* AWarriorsBaseCharacter::GetAbilitySystemComponent() const
