@@ -2,7 +2,7 @@
 
 namespace Debug
 {
-	static void DebugLog(const FString& Msg, const FColor& Color = FColor::White,int32 InKey = 1)
+	static void DebugLog(const FString& Msg, const FColor& Color = FColor::Green,int32 InKey = -1)
 	{
 		if(GEngine)
 		{
@@ -11,8 +11,17 @@ namespace Debug
 		}
 	}
 
+	static void DebugLog(const FString& FloatTitle,float FloatValueToPrint, const FColor& Color = FColor::Green,int32 InKey =-1)
+	{
+		if(GEngine)
+		{
+			const FString FinalMSG = FloatTitle + TEXT(": ") + FString::SanitizeFloat(FloatValueToPrint);
+			GEngine->AddOnScreenDebugMessage(InKey,7.0f,Color,FinalMSG);
+			UE_LOG(LogTemp,Display,TEXT("%s"),*FinalMSG);
+		}
+	}
 	
-	static void LogWarning(const FString& Msg, const FColor& Color= FColor::Yellow,int32 InKey = 1)
+	static void LogWarning(const FString& Msg, const FColor& Color= FColor::Yellow,int32 InKey = -1)
 	{
 		if(GEngine)
 		{
@@ -21,7 +30,7 @@ namespace Debug
 		}
 	}
 
-	static void LogError(const FString& Msg, const FColor& Color= FColor::Red,int32 InKey = 1)
+	static void LogError(const FString& Msg, const FColor& Color= FColor::Red,int32 InKey = -1)
 	{
 		if(GEngine)
 		{
