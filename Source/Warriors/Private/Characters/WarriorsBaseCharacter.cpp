@@ -4,7 +4,7 @@
 #include "Warriors/Public/Characters/WarriorsBaseCharacter.h"
 #include "Warriors/Public/AbilitySystem/WarriorsAbilitySystemComponent.h"
 #include "Warriors/Public/AbilitySystem/WarriorAttributeSet.h"
-
+#include "MotionWarpingComponent.h"
 // Sets default values
 AWarriorsBaseCharacter::AWarriorsBaseCharacter()
 {
@@ -17,6 +17,8 @@ AWarriorsBaseCharacter::AWarriorsBaseCharacter()
 	WarriorsAbilitySystemComponent = CreateDefaultSubobject<UWarriorsAbilitySystemComponent>(TEXT("WarriorsAbilitySystemComponent"));
 
 	WarriorAttributeSet = CreateDefaultSubobject<UWarriorAttributeSet>(TEXT("WarriorAttributeSet"));
+	
+	MotionWarpingComponent = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 }
 
 UAbilitySystemComponent* AWarriorsBaseCharacter::GetAbilitySystemComponent() const
