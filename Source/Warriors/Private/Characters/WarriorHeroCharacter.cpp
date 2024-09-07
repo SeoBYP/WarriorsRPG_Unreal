@@ -2,6 +2,8 @@
 
 
 #include "Warriors/Public/Characters/WarriorHeroCharacter.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -12,6 +14,7 @@
 #include "Warriors/Public/Utils/WarriorGameplayTags.h"
 #include "InputActionValue.h"
 #include "GameplayTagContainer.h"
+#include "WarriorDebugHelper.h"
 #include "AbilitySystem/WarriorsAbilitySystemComponent.h"
 #include "DataAssets/StartUpData/DataAsset_HeroStartUpData.h"
 #include "Components/Combat/HeroCombatComponent.h"
@@ -92,6 +95,9 @@ void AWarriorHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataConfig,WarriorsGameplayTags::InputTag_Move,ETriggerEvent::Triggered,this,&AWarriorHeroCharacter::Input_Move);
 	WarriorInputComponent->BindNativeInputAction(InputConfigDataConfig,WarriorsGameplayTags::InputTag_Look,ETriggerEvent::Triggered,this,&AWarriorHeroCharacter::Input_Look);
+
+	WarriorInputComponent->BindNativeInputAction(InputConfigDataConfig,WarriorsGameplayTags::InputTag_SwitchTarget,ETriggerEvent::Triggered,this,&ThisClass::Input_SwitchTargetTriggerd);
+	WarriorInputComponent->BindNativeInputAction(InputConfigDataConfig,WarriorsGameplayTags::InputTag_SwitchTarget,ETriggerEvent::Completed,this,&ThisClass::Input_SwitchTargetCompleted);
 	
 	WarriorInputComponent->BindAbilityInputAction(InputConfigDataConfig,this,&ThisClass::Input_AbilityInputPressed,&AWarriorHeroCharacter::Input_AbilityInputRealesed);
 
@@ -136,6 +142,20 @@ void AWarriorHeroCharacter::Input_Look(const FInputActionValue& InputActionValue
 	{
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AWarriorHeroCharacter::Input_SwitchTargetTriggerd(const FInputActionValue& InputActionValue)
+{
+	SwitchDirection = InputActionValue.Get<FVector2D>();
+}
+
+void AWarriorHeroCharacter::Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue)
+{
+	FGameplayEventData Data;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(
+		this,
+		SwitchDirection.X >0.f ? WarriorsGameplayTags::Player_Event_SwitchTarget_Right : WarriorsGameplayTags::Player_Event_SwitchTarget_Left,
+		Data);
 }
 
 void AWarriorHeroCharacter::Input_AbilityInputPressed(FGameplayTag InInputTag)

@@ -39,37 +39,42 @@ protected:
 	//~ Begin APawn Interface
 	virtual void PossessedBy(AController* NewController) override;
 	//~ End APawn Interface
-	
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 #pragma region Components
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,category="Camera",meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category="Camera", meta=(AllowPrivateAccess="true"))
 	USpringArmComponent* CameraBoom;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,category="Camera",meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category="Camera", meta=(AllowPrivateAccess="true"))
 	UCameraComponent* FollowCamera;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,category="Combat",meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category="Combat", meta=(AllowPrivateAccess="true"))
 	UHeroCombatComponent* HeroCombatComponent;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,category="Combat",meta=(AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category="Combat", meta=(AllowPrivateAccess="true"))
 	UHeroUIComponent* HeroUIComponent;
 #pragma endregion
 
 #pragma region Inputs
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,category="Character Data",meta=(AllowPrivateAccess="true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, category="Character Data", meta=(AllowPrivateAccess="true"))
 	UDataAsset_InputConfig* InputConfigDataConfig;
 
 	void Input_Move(const FInputActionValue& InputActionValue);
 
 	void Input_Look(const FInputActionValue& InputActionValue);
+	void Input_SwitchTargetTriggerd(const FInputActionValue& InputActionValue);
+	void Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue);
+
+	FVector2D SwitchDirection = FVector2D::ZeroVector;
 
 	void Input_AbilityInputPressed(FGameplayTag InInputTag);
 	void Input_AbilityInputRealesed(FGameplayTag InInputTag);
-#pragma endregion 
+#pragma endregion
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

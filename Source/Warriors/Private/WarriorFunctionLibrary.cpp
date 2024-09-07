@@ -4,6 +4,7 @@
 #include "WarriorFunctionLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GenericTeamAgentInterface.h"
+#include "WarriorDebugHelper.h"
 #include "AbilitySystem/WarriorsAbilitySystemComponent.h"
 #include "Interfaces/PawnCombatInterface.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -26,7 +27,7 @@ void UWarriorFunctionLibrary::AddGameplayTagToActorIfNone(AActor* InActor, FGame
 	}
 }
 
-void UWarriorFunctionLibrary::RemoveGameplayFromActorIfFound(AActor* InActor, FGameplayTag TagToRemove)
+void UWarriorFunctionLibrary::RemoveGameplayTagFromActorIfFound(AActor* InActor, FGameplayTag TagToRemove)
 {
 	UWarriorsAbilitySystemComponent* ASC = NativeGetWarriorASCFromActor(InActor);
 
@@ -100,28 +101,41 @@ FGameplayTag UWarriorFunctionLibrary::ComputeHitReactDirectionTag(AActor* InAtta
 
 	OutAngleDifference = UKismetMathLibrary::DegAcos(DotResult);
 
-	const FVector CrossResult = FVector::CrossProduct(VictimForaward,VictimToAttackerNormalized);
+	const FVector CrossResult = FVector::CrossProduct(VictimForaward, VictimToAttackerNormalized);
 
-	if(CrossResult.Z <0.f)
+	if (CrossResult.Z < 0.f)
 	{
 		OutAngleDifference *= -1.0f;
 	}
 
-	if (OutAngleDifference>=-45.f && OutAngleDifference <=45.f)
+	if (OutAngleDifference >= -45.f && OutAngleDifference <= 45.f)
 	{
 		return WarriorsGameplayTags::Shared_Status_HitReact_Front;
 	}
-	else if (OutAngleDifference<-45.f && OutAngleDifference>=-135.f)
+	else if (OutAngleDifference < -45.f && OutAngleDifference >= -135.f)
 	{
 		return WarriorsGameplayTags::Shared_Status_HitReact_Left;
 	}
-	else if (OutAngleDifference<-135.f || OutAngleDifference>135.f)
+	else if (OutAngleDifference < -135.f || OutAngleDifference > 135.f)
 	{
 		return WarriorsGameplayTags::Shared_Status_HitReact_Back;
 	}
-	else if(OutAngleDifference>45.f && OutAngleDifference<=135.f)
+	else if (OutAngleDifference > 45.f && OutAngleDifference <= 135.f)
 	{
 		return WarriorsGameplayTags::Shared_Status_HitReact_Right;
 	}
 	return WarriorsGameplayTags::Shared_Status_HitReact_Front;
+}
+
+bool UWarriorFunctionLibrary::IsValidBlock(AActor* InAttacker, AActor* InDefender)
+{
+	check(InAttacker && InDefender);
+
+	const float DotResult = FVector::DotProduct(InAttacker->GetActorForwardVector(),
+	                                            InDefender->GetActorForwardVector());
+
+	const FString DebugString = FString::Printf(TEXT("Dot result %f %s"), DotResult,
+	                                            DotResult < 0.f ? TEXT("valid Block") : TEXT("not valid Block"));
+
+	return DotResult < -0.1f;
 }

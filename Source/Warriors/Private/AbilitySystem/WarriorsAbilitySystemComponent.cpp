@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/WarriorsAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/WarriorHeroGameplayAbility.h"
+#include "Utils/WarriorGameplayTags.h"
 
 void UWarriorsAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& InInputTag)
 {
@@ -15,13 +16,38 @@ void UWarriorsAbilitySystemComponent::OnAbilityInputPressed(const FGameplayTag& 
 	{
 		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag))
 			continue;
-
-		TryActivateAbility(AbilitySpec.Handle);
+		if (InInputTag.MatchesTag(WarriorsGameplayTags::InputTag_Toggleable))
+		{
+			if (AbilitySpec.IsActive())
+			{
+				CancelAbilityHandle(AbilitySpec.Handle);
+			}
+			else
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
+		}
+		else
+		{
+			TryActivateAbility(AbilitySpec.Handle);
+		}
 	}
 }
 
 void UWarriorsAbilitySystemComponent::OnAbilityInputRealesed(const FGameplayTag& InInputTag)
 {
+	if (!InInputTag.IsValid() || !InInputTag.MatchesTag(WarriorsGameplayTags::InputTag_MustBeHeld))
+	{
+		return;
+	}
+
+	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InInputTag) && AbilitySpec.IsActive())
+		{
+			CancelAbilityHandle(AbilitySpec.Handle);
+		}
+	}
 }
 
 void UWarriorsAbilitySystemComponent::GrantHeroWeaponAbilities(
