@@ -6,6 +6,7 @@
 #include "WarriorsBaseCharacter.h"
 #include "WarriorEnemyCharacter.generated.h"
 
+class UBoxComponent;
 class UWidgetComponent;
 class UEnemyUIComponent;
 class UEnemyCombatComponent;
@@ -19,7 +20,6 @@ class WARRIORS_API AWarriorEnemyCharacter : public AWarriorsBaseCharacter
 public:
 	// Sets default values for this character's properties
 	AWarriorEnemyCharacter();
-	
 
 
 	//~ Begin IPawnCombatInterface Interface
@@ -30,28 +30,50 @@ public:
 	virtual UPawnUIComponent* GetPawnUIComponent() const override;
 	virtual UEnemyUIComponent* GetEnemyUIComponent() const override;
 	//~ End IPawnUIInterface Interface
-	
+
 private:
 	void InitEnemyStartUpData();
-	
-protected:
 
+protected:
 	virtual void BeginPlay() override;
-	
+
 	//~ Begin APawn Interface
 	virtual void PossessedBy(AController* NewController) override;
 	//~ End APawn Interface
-	
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Combat")
+
+#if WITH_EDITOR
+	//~ Begin UObejct Interface
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+	//~ End UObejct Interface
+#endif
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
 	UEnemyCombatComponent* EnemyCombatComponent;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="UI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
+	UBoxComponent* LeftHandCollistionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
+	FName LeftHandCollisionBoxAttachBoneName;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Combat")
+	UBoxComponent* RightHandCollistionBox;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Combat")
+	FName RightHandCollisionBoxAttachBoneName;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UEnemyUIComponent* EnemyUIComponent;
 
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="UI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="UI")
 	UWidgetComponent* EnemyHealthWidgetComponent;
-	
-public:
-	FORCEINLINE UEnemyCombatComponent* GetEnemeyCombatComponent() const {return EnemyCombatComponent;}
-};
 
+	UFUNCTION()
+	virtual void OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	                                            UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+	                                            const FHitResult& SweepResult);
+
+public:
+	FORCEINLINE UEnemyCombatComponent* GetEnemeyCombatComponent() const { return EnemyCombatComponent; }
+	FORCEINLINE UBoxComponent* GetLeftHandCollistionBox() const { return LeftHandCollistionBox; }
+	FORCEINLINE UBoxComponent* GetRightHandCollistionBox() const { return RightHandCollistionBox; }
+};

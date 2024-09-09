@@ -13,4 +13,8 @@ class WARRIORS_API UEnemyCombatComponent : public UPawnCombatComponent
 	GENERATED_BODY()
 public:
 	virtual void OnHitTargetActor(AActor* HitActor) override;
+
+protected:
+	virtual void ToggleBodyCollisionBoxCollistion(bool bShouldEnable, EToggleDamageType ToggleDamageType) override;
+	
 };

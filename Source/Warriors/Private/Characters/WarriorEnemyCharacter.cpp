@@ -5,6 +5,8 @@
 #include "Engine/AssetManager.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "WarriorDebugHelper.h"
+#include "WarriorFunctionLibrary.h"
+#include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/UI/EnemyUIComponent.h"
 #include "Widgets/WarriorWidgetBase.h"
@@ -29,15 +31,57 @@ AWarriorEnemyCharacter::AWarriorEnemyCharacter()
 
 	EnemyHealthWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("EnemyHealthWidgetComponent"));
 	EnemyHealthWidgetComponent->SetupAttachment(GetMesh());
+
+	LeftHandCollistionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("LeftHandCollistionBox"));
+	LeftHandCollistionBox->SetupAttachment(GetMesh());
+	LeftHandCollistionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	LeftHandCollistionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
+
+	RightHandCollistionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("RightHandCollistionBox"));
+	RightHandCollistionBox->SetupAttachment(GetMesh());
+	RightHandCollistionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RightHandCollistionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
+	
 }
-
-
 
 void AWarriorEnemyCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
 	InitEnemyStartUpData();
+}
+#if WITH_EDITOR
+
+void AWarriorEnemyCharacter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+
+	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass,LeftHandCollisionBoxAttachBoneName))
+	{
+		if(LeftHandCollistionBox)
+			LeftHandCollistionBox->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,LeftHandCollisionBoxAttachBoneName);
+	}
+
+	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass,RightHandCollisionBoxAttachBoneName))
+	{
+		if(RightHandCollistionBox)
+			RightHandCollistionBox->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,RightHandCollisionBoxAttachBoneName);
+	}
+}
+
+#endif
+void AWarriorEnemyCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+                                                            AActor* OtherActor, UPrimitiveComponent* OtherComp,
+                                                            int32 OtherBodyIndex, bool bFromSweep,
+                                                            const FHitResult& SweepResult)
+{
+	if(APawn* HitPawn = Cast<APawn>(OtherActor))
+	{
+		if(UWarriorFunctionLibrary::IsTargetPawnHostile(this,HitPawn))
+		{
+			EnemyCombatComponent->OnHitTargetActor(HitPawn);
+		}
+	}
 }
 
 UPawnCombatComponent* AWarriorEnemyCharacter::GetPawnCombatComponent() const
@@ -57,7 +101,7 @@ UEnemyUIComponent* AWarriorEnemyCharacter::GetEnemyUIComponent() const
 
 void AWarriorEnemyCharacter::InitEnemyStartUpData()
 {
-	if(CharacterStartUpData.IsNull())
+	if (CharacterStartUpData.IsNull())
 		return;
 
 	UAssetManager::GetStreamableManager().RequestAsyncLoad(
@@ -65,7 +109,7 @@ void AWarriorEnemyCharacter::InitEnemyStartUpData()
 		FStreamableDelegate::CreateLambda(
 			[this]()
 			{
-				if(UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.Get())
+				if (UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.Get())
 				{
 					LoadedData->GiveToAbilitySystemComponent(WarriorsAbilitySystemComponent);
 					Debug::DebugLog(TEXT("Enemy Start Up Data Loaded"));
@@ -79,9 +123,8 @@ void AWarriorEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(UWarriorWidgetBase* HealthWidget = Cast<UWarriorWidgetBase>(EnemyHealthWidgetComponent->GetUserWidgetObject()))
+	if (UWarriorWidgetBase* HealthWidget = Cast<UWarriorWidgetBase>(EnemyHealthWidgetComponent->GetUserWidgetObject()))
 	{
 		HealthWidget->InitEnemyCreatedWidget(this);
 	}
 }
-

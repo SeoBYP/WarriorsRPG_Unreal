@@ -6,6 +6,8 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "WarriorDebugHelper.h"
 #include "WarriorFunctionLibrary.h"
+#include "Characters/WarriorEnemyCharacter.h"
+#include "Components/BoxComponent.h"
 #include "Utils/WarriorGameplayTags.h"
 
 void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
@@ -18,12 +20,14 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 	OverllapedActors.AddUnique(HitActor);
 
 	bool bIsValidBlock = false;
-	const bool bIsPlayerBlocking = UWarriorFunctionLibrary::NativeDoesActorHaveTag(HitActor,WarriorsGameplayTags::Player_Status_Blocking);
-	const bool bIsMyAttackUnblockable = false;
+	const bool bIsPlayerBlocking = UWarriorFunctionLibrary::NativeDoesActorHaveTag(
+		HitActor, WarriorsGameplayTags::Player_Status_Blocking);
+	const bool bIsMyAttackUnblockable = UWarriorFunctionLibrary::NativeDoesActorHaveTag(
+		GetOwningPawn(), WarriorsGameplayTags::Enemy_Status_Unblockable);
 
 	if (bIsPlayerBlocking && !bIsMyAttackUnblockable)
 	{
-		bIsValidBlock = UWarriorFunctionLibrary::IsValidBlock(GetOwningPawn(),HitActor);
+		bIsValidBlock = UWarriorFunctionLibrary::IsValidBlock(GetOwningPawn(), HitActor);
 	}
 
 	FGameplayEventData EventData;
@@ -36,7 +40,7 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 			HitActor,
 			WarriorsGameplayTags::Player_Event_SuccessfulBlock,
 			EventData
-			);
+		);
 	}
 	else
 	{
@@ -44,5 +48,31 @@ void UEnemyCombatComponent::OnHitTargetActor(AActor* HitActor)
 			GetOwningPawn(),
 			WarriorsGameplayTags::Shared_Event_MeleeHit,
 			EventData);
+	}
+}
+
+void UEnemyCombatComponent::ToggleBodyCollisionBoxCollistion(bool bShouldEnable, EToggleDamageType ToggleDamageType)
+{
+	AWarriorEnemyCharacter* OwningEnemyCharacter = GetOwningPawn<AWarriorEnemyCharacter>();
+	check(OwningEnemyCharacter);
+
+	UBoxComponent* LeftHandCollisionBox = OwningEnemyCharacter->GetLeftHandCollistionBox();
+	UBoxComponent* RightHandCollisionBox = OwningEnemyCharacter->GetRightHandCollistionBox();
+
+	check(RightHandCollisionBox && LeftHandCollisionBox);
+	switch (ToggleDamageType)
+	{
+	case EToggleDamageType::LeftHand:
+		LeftHandCollisionBox->SetCollisionEnabled(bShouldEnable? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		break;
+	case EToggleDamageType::RightHand:
+		RightHandCollisionBox->SetCollisionEnabled(bShouldEnable? ECollisionEnabled::QueryOnly : ECollisionEnabled::NoCollision);
+		break;
+	default:
+		break;
+	}
+	if(!bShouldEnable)
+	{
+		OverllapedActors.Empty();
 	}
 }
