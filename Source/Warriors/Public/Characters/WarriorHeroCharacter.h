@@ -63,13 +63,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, category="Character Data", meta=(AllowPrivateAccess="true"))
 	UDataAsset_InputConfig* InputConfigDataConfig;
 
-	void Input_Move(const FInputActionValue& InputActionValue);
+	UPROPERTY()
+	FVector2D SwitchDirection = FVector2D::ZeroVector;
 
+	void Input_Move(const FInputActionValue& InputActionValue);
 	void Input_Look(const FInputActionValue& InputActionValue);
+
 	void Input_SwitchTargetTriggerd(const FInputActionValue& InputActionValue);
 	void Input_SwitchTargetCompleted(const FInputActionValue& InputActionValue);
 
-	FVector2D SwitchDirection = FVector2D::ZeroVector;
+	void Input_PickUpStonesStarted(const FInputActionValue& InputActionValue);
 
 	void Input_AbilityInputPressed(FGameplayTag InInputTag);
 	void Input_AbilityInputRealesed(FGameplayTag InInputTag);

@@ -8,19 +8,18 @@
 #include "Controllers/WarriorsHeroController.h"
 
 
-
 AWarriorHeroCharacter* UWarriorHeroGameplayAbility::GetHeroCharacterFromActorInfo()
 {
 	if (!ChachedWarriorHeroCharacter.IsValid())
 	{
 		ChachedWarriorHeroCharacter = Cast<AWarriorHeroCharacter>(CurrentActorInfo->AvatarActor);
 	}
-	return ChachedWarriorHeroCharacter.IsValid()? ChachedWarriorHeroCharacter.Get() : nullptr;
+	return ChachedWarriorHeroCharacter.IsValid() ? ChachedWarriorHeroCharacter.Get() : nullptr;
 }
 
 AWarriorsHeroController* UWarriorHeroGameplayAbility::GetHeroControllerFromActorInfo()
 {
-	if(!ChachedWarriorHeroController.IsValid())
+	if (!ChachedWarriorHeroController.IsValid())
 	{
 		ChachedWarriorHeroController = Cast<AWarriorsHeroController>(CurrentActorInfo->PlayerController);
 	}
@@ -32,6 +31,11 @@ UHeroCombatComponent* UWarriorHeroGameplayAbility::GetHeroCombatComponentFromAct
 	return GetHeroCharacterFromActorInfo()->GetHeroCombatComponent();
 }
 
+UHeroUIComponent* UWarriorHeroGameplayAbility::GetHeroUIComponentFromActorInfo()
+{
+	return GetHeroCharacterFromActorInfo()->GetHeroUIComponent();
+}
+
 FGameplayEffectSpecHandle UWarriorHeroGameplayAbility::MakeHeroDamageEffectSpecHandle(
 	TSubclassOf<UGameplayEffect> EffectClass, float InWeaponBaseDamage, FGameplayTag InCurrentAttackTypeTag,
 	int32 InUsedComboCount)
@@ -41,8 +45,8 @@ FGameplayEffectSpecHandle UWarriorHeroGameplayAbility::MakeHeroDamageEffectSpecH
 	FGameplayEffectContextHandle ContextHandle = GetWarriorsAbilitySystemComponentFromActorInfo()->MakeEffectContext();
 	ContextHandle.SetAbility(this);
 	ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
-	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(),GetAvatarActorFromActorInfo());
-	
+	ContextHandle.AddInstigator(GetAvatarActorFromActorInfo(), GetAvatarActorFromActorInfo());
+
 	FGameplayEffectSpecHandle EffectSpecHandle = GetWarriorsAbilitySystemComponentFromActorInfo()->MakeOutgoingSpec(
 		EffectClass,
 		GetAbilityLevel(),
@@ -53,10 +57,28 @@ FGameplayEffectSpecHandle UWarriorHeroGameplayAbility::MakeHeroDamageEffectSpecH
 		WarriorsGameplayTags::Shared_SetByCaller_BaseDamage,
 		InWeaponBaseDamage);
 
-	if(InCurrentAttackTypeTag.IsValid())
+	if (InCurrentAttackTypeTag.IsValid())
 	{
-		EffectSpecHandle.Data->SetSetByCallerMagnitude(InCurrentAttackTypeTag,InUsedComboCount);
+		EffectSpecHandle.Data->SetSetByCallerMagnitude(InCurrentAttackTypeTag, InUsedComboCount);
 	}
-	
+
 	return EffectSpecHandle;
+}
+
+bool UWarriorHeroGameplayAbility::GetAbilityRemainingCooldownByTag(FGameplayTag InCooldownTag, float& TotalCooldownTime,
+                                                                   float& RemainingCooldownTime)
+{
+	check(InCooldownTag.IsValid());
+
+	FGameplayEffectQuery CooldownQuery = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(
+		InCooldownTag.GetSingleTagContainer());
+
+	TArray<TPair<float,float>> TimeRemainingAndDuration = GetAbilitySystemComponentFromActorInfo()->GetActiveEffectsTimeRemainingAndDuration(CooldownQuery);
+	if(!TimeRemainingAndDuration.IsEmpty())
+	{
+		RemainingCooldownTime = TimeRemainingAndDuration[0].Key;
+		TotalCooldownTime = TimeRemainingAndDuration[0].Value;
+	}
+
+	return RemainingCooldownTime > 0.f;
 }
