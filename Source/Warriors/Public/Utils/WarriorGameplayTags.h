@@ -100,4 +100,12 @@ namespace WarriorsGameplayTags
 	WARRIORS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Right)
 	WARRIORS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_HitReact_Back)
 	WARRIORS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shared_Status_Invincible)
+
+
+	/** Game Data Tags */
+	WARRIORS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameData_Level_SurvivalGameModeMap)
+	WARRIORS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameData_Level_MainMenuMap)
+
+	
+	WARRIORS_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameData_SaveGame_Slot_1)
 }

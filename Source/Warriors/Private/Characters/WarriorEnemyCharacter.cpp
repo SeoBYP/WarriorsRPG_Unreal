@@ -9,6 +9,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/UI/EnemyUIComponent.h"
+#include "GameModes/WarriorsBaseGameMode.h"
 #include "Widgets/WarriorWidgetBase.h"
 
 // Sets default values
@@ -41,7 +42,6 @@ AWarriorEnemyCharacter::AWarriorEnemyCharacter()
 	RightHandCollistionBox->SetupAttachment(GetMesh());
 	RightHandCollistionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RightHandCollistionBox->OnComponentBeginOverlap.AddUniqueDynamic(this, &ThisClass::OnBodyCollisionBoxBeginOverlap);
-	
 }
 
 void AWarriorEnemyCharacter::PossessedBy(AController* NewController)
@@ -56,16 +56,22 @@ void AWarriorEnemyCharacter::PostEditChangeProperty(struct FPropertyChangedEvent
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
-	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass,LeftHandCollisionBoxAttachBoneName))
+	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(
+		ThisClass, LeftHandCollisionBoxAttachBoneName))
 	{
-		if(LeftHandCollistionBox)
-			LeftHandCollistionBox->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,LeftHandCollisionBoxAttachBoneName);
+		if (LeftHandCollistionBox)
+			LeftHandCollistionBox->AttachToComponent(
+				GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
+				LeftHandCollisionBoxAttachBoneName);
 	}
 
-	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(ThisClass,RightHandCollisionBoxAttachBoneName))
+	if (PropertyChangedEvent.GetMemberPropertyName() == GET_MEMBER_NAME_CHECKED(
+		ThisClass, RightHandCollisionBoxAttachBoneName))
 	{
-		if(RightHandCollistionBox)
-			RightHandCollistionBox->AttachToComponent(GetMesh(),FAttachmentTransformRules::SnapToTargetNotIncludingScale,RightHandCollisionBoxAttachBoneName);
+		if (RightHandCollistionBox)
+			RightHandCollistionBox->AttachToComponent(
+				GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
+				RightHandCollisionBoxAttachBoneName);
 	}
 }
 
@@ -75,9 +81,9 @@ void AWarriorEnemyCharacter::OnBodyCollisionBoxBeginOverlap(UPrimitiveComponent*
                                                             int32 OtherBodyIndex, bool bFromSweep,
                                                             const FHitResult& SweepResult)
 {
-	if(APawn* HitPawn = Cast<APawn>(OtherActor))
+	if (APawn* HitPawn = Cast<APawn>(OtherActor))
 	{
-		if(UWarriorFunctionLibrary::IsTargetPawnHostile(this,HitPawn))
+		if (UWarriorFunctionLibrary::IsTargetPawnHostile(this, HitPawn))
 		{
 			EnemyCombatComponent->OnHitTargetActor(HitPawn);
 		}
@@ -104,15 +110,41 @@ void AWarriorEnemyCharacter::InitEnemyStartUpData()
 	if (CharacterStartUpData.IsNull())
 		return;
 
+	int32 AbilityApplyLevel = 1;
+
+	if (AWarriorsBaseGameMode* BaseGameMode = GetWorld()->GetAuthGameMode<AWarriorsBaseGameMode>())
+	{
+		switch (BaseGameMode->GetWarriorGameDifficulty())
+		{
+		case EWarriorGameDifficulty::Easy:
+			AbilityApplyLevel = 1;
+			break;
+
+		case EWarriorGameDifficulty::Normal:
+			AbilityApplyLevel = 2;
+			break;
+
+		case EWarriorGameDifficulty::Hard:
+			AbilityApplyLevel = 3;
+			break;
+
+		case EWarriorGameDifficulty::VeryHard:
+			AbilityApplyLevel = 4;
+			break;
+
+		default:
+			break;
+		}
+	}
+
 	UAssetManager::GetStreamableManager().RequestAsyncLoad(
 		CharacterStartUpData.ToSoftObjectPath(),
 		FStreamableDelegate::CreateLambda(
-			[this]()
+			[this,AbilityApplyLevel]()
 			{
 				if (UDataAsset_StartUpDataBase* LoadedData = CharacterStartUpData.Get())
 				{
-					LoadedData->GiveToAbilitySystemComponent(WarriorsAbilitySystemComponent);
-					Debug::DebugLog(TEXT("Enemy Start Up Data Loaded"));
+					LoadedData->GiveToAbilitySystemComponent(WarriorsAbilitySystemComponent, AbilityApplyLevel);
 				}
 			}
 		)

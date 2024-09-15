@@ -11,7 +11,7 @@ public class Warriors : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
 			"Core", "CoreUObject", "Engine", "InputCore", "UMG","AIModule",
-			"AnimGraphRuntime","MotionWarping","Niagara","NavigationSystem",
+			"AnimGraphRuntime","MotionWarping","Niagara","NavigationSystem","MoviePlayer",
 			"GameplayTags", "EnhancedInput", "GameplayTasks",
 		});
 

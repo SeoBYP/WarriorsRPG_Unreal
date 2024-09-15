@@ -5,11 +5,15 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GenericTeamAgentInterface.h"
 #include "GameplayEffectTypes.h"
+#include "WarriorDebugHelper.h"
 #include "AbilitySystem/WarriorsAbilitySystemComponent.h"
 #include "Interfaces/PawnCombatInterface.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Utils/WarriorGameplayTags.h"
 #include "WarriorTypes/WarriorCountDownAction.h"
+#include "WarriorGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "SaveGame/WarriorSaveGame.h"
 
 UWarriorsAbilitySystemComponent* UWarriorFunctionLibrary::NativeGetWarriorASCFromActor(AActor* InActor)
 {
@@ -169,27 +173,105 @@ void UWarriorFunctionLibrary::CountDown(const UObject* WorldContextObject, float
 
 	//FLatentActionManager 에 대해서 문서화
 	FLatentActionManager& LatentActionManager = World->GetLatentActionManager();
-	FWarriorCountDownAction* FoundAction = LatentActionManager.FindExistingAction<FWarriorCountDownAction>(LatentInfo.CallbackTarget,LatentInfo.UUID);
+	FWarriorCountDownAction* FoundAction = LatentActionManager.FindExistingAction<FWarriorCountDownAction>(
+		LatentInfo.CallbackTarget, LatentInfo.UUID);
 
-	if(CountDownInput == EWarriorCountDownActionInput::Start)
+	if (CountDownInput == EWarriorCountDownActionInput::Start)
 	{
-		if(!FoundAction)
+		if (!FoundAction)
 		{
 			LatentActionManager.AddNewAction(
 				LatentInfo.CallbackTarget,
 				LatentInfo.UUID,
-				new FWarriorCountDownAction(TotalTime,UpdateInterval,OutRemainingTime,
-					CountDownOutput,LatentInfo));
-			
+				new FWarriorCountDownAction(TotalTime, UpdateInterval, OutRemainingTime,
+				                            CountDownOutput, LatentInfo));
 		}
 	}
 
-	if(CountDownInput == EWarriorCountDownActionInput::Cancel)
+	if (CountDownInput == EWarriorCountDownActionInput::Cancel)
 	{
-		if(FoundAction)
+		if (FoundAction)
 		{
 			FoundAction->CancelAction();
 		}
 	}
-	
+}
+
+UWarriorGameInstance* UWarriorFunctionLibrary::GetWarriorGameInstance(const UObject* WorldContextObject)
+{
+	if (GEngine)
+	{
+		if (UWorld* World = GEngine->
+			GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			return World->GetGameInstance<UWarriorGameInstance>();
+		}
+	}
+	return nullptr;
+}
+
+void UWarriorFunctionLibrary::ToggleInputMode(const UObject* WorldContextObject, EWarriorInputMode InInputMode)
+{
+	APlayerController* PlayerController = nullptr;
+
+	if (GEngine)
+	{
+		if (UWorld* World = GEngine->
+			GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+		{
+			PlayerController = World->GetFirstPlayerController();
+		}
+	}
+	if (!PlayerController)
+	{
+		return;
+	}
+
+	FInputModeGameOnly GameOnlyMode;
+	FInputModeUIOnly UIOnlyMode;
+	switch (InInputMode)
+	{
+	case EWarriorInputMode::GameOnly:
+		PlayerController->SetInputMode(GameOnlyMode);
+		PlayerController->bShowMouseCursor = false;
+		break;
+	case EWarriorInputMode::UIOnly:
+		PlayerController->SetInputMode(UIOnlyMode);
+		PlayerController->bShowMouseCursor = true;
+		break;
+	default: ;
+	}
+}
+
+void UWarriorFunctionLibrary::SaveCurrentGameDifficulty(EWarriorGameDifficulty InDifficultyToSave)
+{
+ 	USaveGame* SaveGameObject = UGameplayStatics::CreateSaveGameObject(UWarriorSaveGame::StaticClass());
+
+	if(UWarriorSaveGame* WarriorSaveGameObject = Cast<UWarriorSaveGame>(SaveGameObject))
+	{
+		WarriorSaveGameObject->SavedCurrentGameDifficulty = InDifficultyToSave;
+
+	 	const bool bWasSaved = UGameplayStatics::SaveGameToSlot(WarriorSaveGameObject,
+			WarriorsGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(),
+			0);
+
+		Debug::DebugLog(bWasSaved ? TEXT("Difficulty Saved") : TEXT("Difficulty Not Saved"));
+	}
+}
+
+bool UWarriorFunctionLibrary::TryLoadSavedGameDifficulty(EWarriorGameDifficulty& OutDifficultyToSave)
+{
+	if( UGameplayStatics::DoesSaveGameExist(WarriorsGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(),0))
+	{
+		USaveGame* SaveGameObject = UGameplayStatics::LoadGameFromSlot(WarriorsGameplayTags::GameData_SaveGame_Slot_1.GetTag().ToString(),0);
+
+		if(UWarriorSaveGame* WarriorSaveGameObject = Cast<UWarriorSaveGame>(SaveGameObject))
+		{
+			OutDifficultyToSave = WarriorSaveGameObject->SavedCurrentGameDifficulty;
+
+			Debug::DebugLog(TEXT("Loading Successful"));
+			return true;
+		}
+	}
+	return false;
 }
