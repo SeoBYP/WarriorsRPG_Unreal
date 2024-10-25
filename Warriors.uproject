@@ -11,7 +11,8 @@
 			"AdditionalDependencies": [
 				"EnhancedInput",
 				"GameplayAbilities",
-				"Engine"
+				"Engine",
+				"MassEntity"
 			]
 		}
 	],
@@ -29,6 +30,22 @@
 		},
 		{
 			"Name": "MotionWarping",
+			"Enabled": true
+		},
+		{
+			"Name": "MassAI",
+			"Enabled": true
+		},
+		{
+			"Name": "MassCrowd",
+			"Enabled": true
+		},
+		{
+			"Name": "MassEntity",
+			"Enabled": true
+		},
+		{
+			"Name": "MassGameplay",
 			"Enabled": true
 		}
 	]

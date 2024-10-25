@@ -275,3 +275,15 @@ bool UWarriorFunctionLibrary::TryLoadSavedGameDifficulty(EWarriorGameDifficulty&
 	}
 	return false;
 }
+
+AWarriorHeroCharacter* UWarriorFunctionLibrary::GetWarriorHeroCharacter(const UObject* WorldContextObject)
+{
+	if(ACharacter* PlayerCharacter = UGameplayStatics::GetPlayerCharacter(WorldContextObject,0))
+	{
+		if(AWarriorHeroCharacter* WarriorHeroCharacter = Cast<AWarriorHeroCharacter>(PlayerCharacter))
+		{
+			return WarriorHeroCharacter;
+		}
+	}
+	return nullptr;
+}

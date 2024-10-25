@@ -20,6 +20,13 @@ protected:
 		return CastChecked<T>(GetOwner());
 	}
 
+	template<class T>
+	T* SafeGetOwnerPawn() const
+	{
+		static_assert(TPointerIsConvertibleFromTo<T,APawn>::Value,"'T' Template Parameter get GetPawn must be derived from APawn");
+		return Cast<T>(GetOwner());
+	}
+	
 	APawn* GetOwningPawn() const
 	{
 		return GetOwningPawn<APawn>();

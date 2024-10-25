@@ -18,6 +18,9 @@
 #include "AbilitySystem/WarriorsAbilitySystemComponent.h"
 #include "DataAssets/StartUpData/DataAsset_HeroStartUpData.h"
 #include "Components/Combat/HeroCombatComponent.h"
+#include "Components/Dialogue/HeroDialogueComponent.h"
+#include "Components/Interaction/InteractorComponent.h"
+#include "Components/Inventory/InventoryComponent.h"
 #include "Components/UI/HeroUIComponent.h"
 #include "GameModes/WarriorsBaseGameMode.h"
 
@@ -47,6 +50,9 @@ AWarriorHeroCharacter::AWarriorHeroCharacter()
 
 	HeroCombatComponent = CreateDefaultSubobject<UHeroCombatComponent>(TEXT("HeroCombatComponent"));
 	HeroUIComponent = CreateDefaultSubobject<UHeroUIComponent>(TEXT("HeroUIComponent"));
+	HeroDialogueComponent = CreateDefaultSubobject<UHeroDialogueComponent>(TEXT("HeroDialogueComponent"));
+	InteractorComponent = CreateDefaultSubobject<UInteractorComponent>(TEXT("InteractorComponent"));
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 }
 
 UPawnCombatComponent* AWarriorHeroCharacter::GetPawnCombatComponent() const
@@ -62,6 +68,11 @@ UPawnUIComponent* AWarriorHeroCharacter::GetPawnUIComponent() const
 UHeroUIComponent* AWarriorHeroCharacter::GetHeroUIComponent() const
 {
 	return HeroUIComponent;
+}
+
+UHeroDialogueComponent* AWarriorHeroCharacter::GetHeroDialogueComponent() const
+{
+	return HeroDialogueComponent;
 }
 
 void AWarriorHeroCharacter::PossessedBy(AController* NewController)
@@ -158,6 +169,9 @@ void AWarriorHeroCharacter::Input_Move(const FInputActionValue& InputActionValue
 
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
+
+	if(HeroDialogueComponent)
+		HeroDialogueComponent->DialogueInteractCheck(FollowCamera);
 }
 
 void AWarriorHeroCharacter::Input_Look(const FInputActionValue& InputActionValue)
@@ -215,4 +229,5 @@ void AWarriorHeroCharacter::Input_AbilityInputRealesed(FGameplayTag InInputTag)
 void AWarriorHeroCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 }

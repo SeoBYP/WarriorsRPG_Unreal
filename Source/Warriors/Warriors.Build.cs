@@ -12,6 +12,7 @@ public class Warriors : ModuleRules
 		{
 			"Core", "CoreUObject", "Engine", "InputCore", "UMG","AIModule",
 			"AnimGraphRuntime","MotionWarping","Niagara","NavigationSystem","MoviePlayer",
+			"MassEntity", "MassMovement","MassAIBehavior",
 			"GameplayTags", "EnhancedInput", "GameplayTasks",
 		});
 

@@ -11,7 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEquippedWeaponChangedDelegate,TSo
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAbilityIconSlotUpdatedDelegate, FGameplayTag,AbilityInputTag,TSoftObjectPtr<UMaterialInterface>,SoftAbilityIconMaterial);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FonAbilityCooldownBeginDelegate,FGameplayTag,AbilityInputTag,float, TotalCooldownTime, float, RemainingCooldownTime);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoneInteractedDelegate, bool, bShouldDisplayInputKey);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDisplayInteractedDialogueDelegate,AActor*,InteractedActor,bool,bShowMessage);
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class WARRIORS_API UHeroUIComponent : public UPawnUIComponent
 {
@@ -32,4 +32,7 @@ public:
 
 	UPROPERTY(BlueprintCallable,BlueprintAssignable)
 	FOnStoneInteractedDelegate OnStoneInteracted;
+
+	UPROPERTY(BlueprintCallable,BlueprintAssignable)
+	FOnDisplayInteractedDialogueDelegate OnDisplayInteracted;
 };

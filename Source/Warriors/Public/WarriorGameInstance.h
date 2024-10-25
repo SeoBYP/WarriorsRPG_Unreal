@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Engine/GameInstance.h"
+#include "SaveGame/InventorySaveData.h"
 #include "WarriorGameInstance.generated.h"
 
 USTRUCT(BlueprintType)
@@ -41,7 +42,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FWarriorGameLevelSet> GameLevelSets;
 
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	UUserWidget* HeroHUD;
+	
 public:
 	UFUNCTION(BlueprintCallable, meta=(GameplayTagFileter = "GameData.Level"))
 	TSoftObjectPtr<UWorld> GetGameLevelByTag(FGameplayTag InTag) const;
+
+	UFUNCTION(BlueprintCallable, Category="HUD")
+	void SetHeroHUD(UUserWidget* InHeroHUD) { HeroHUD = InHeroHUD; }
+
+	UFUNCTION(BlueprintCallable, Category="HUD")
+	UUserWidget* GetHeroHUD() const { return HeroHUD; }
 };

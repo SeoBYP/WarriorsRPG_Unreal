@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "GameplayEffectTypes.h"
+#include "Characters/WarriorHeroCharacter.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "WarriorTypes/WarriorEnumTypes.h"
 #include "WarriorFunctionLibrary.generated.h"
@@ -61,7 +62,6 @@ public:
 	float& OutRemainingTime,EWarriorCountDownActionInput CountDownInput,
 	UPARAM(DisplayName = "Output") EWarriorCountDownActionOutput & CountDownOutput, FLatentActionInfo LatentInfo);
 
-
 	UFUNCTION(BlueprintPure, Category = "Warrior|FunctionLibrary", meta = (WorldContext = "WorldContextObject"))
 	static UWarriorGameInstance* GetWarriorGameInstance(const UObject* WorldContextObject);
 	
@@ -73,6 +73,9 @@ public:
 
 	UFUNCTION(BlueprintCallable,Category = "Warrior|FunctionLibrary")
 	static bool TryLoadSavedGameDifficulty(EWarriorGameDifficulty& OutDifficultyToSave);
+
+	UFUNCTION(BlueprintCallable,BlueprintPure, Category = "Warrior|FunctionLibrary",meta = (WorldContext = "WorldContextObject"))
+	static AWarriorHeroCharacter* GetWarriorHeroCharacter(const UObject* WorldContextObject);
 };
 
 
