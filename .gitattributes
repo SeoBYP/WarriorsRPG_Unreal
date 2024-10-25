@@ -1,3 +1,4 @@
 Content/Levels/SurvivalGameModeMap_BuiltData.uasset filter=lfs diff=lfs merge=lfs -text
 Content/MarketPlaces/InfinityBladeIceLands/Maps/FrozenCove.umap filter=lfs diff=lfs merge=lfs -text
 Content/MarketPlaces/FeudalJapan_Meshingun/Environment/Texture/T_Mountain_01a_Normal.uasset filter=lfs diff=lfs merge=lfs -text
+Content/MarketPlaces/FeudalJapan_Meshingun/Environment/Mesh/Prop/SM_MetalLantern_01a.uasset filter=lfs diff=lfs merge=lfs -text
