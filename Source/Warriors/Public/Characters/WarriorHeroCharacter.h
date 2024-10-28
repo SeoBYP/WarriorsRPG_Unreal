@@ -108,5 +108,5 @@ public:
 
 	FORCEINLINE UHeroCombatComponent* GetHeroCombatComponent() const { return HeroCombatComponent; }
 	FORCEINLINE UInteractorComponent* GetInteractorComponent() const {return InteractorComponent;}
-	FORCEINLINE UInventoryComponent* GetUInventoryComponent() const {return InventoryComponent;}
+	FORCEINLINE UInventoryComponent* GetInventoryComponent() const {return InventoryComponent;}
 };

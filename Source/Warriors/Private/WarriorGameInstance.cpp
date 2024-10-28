@@ -2,7 +2,7 @@
 
 
 #include "WarriorGameInstance.h"
-
+#include "Systems/WidgetSubSystem.h"
 #include "MoviePlayer.h"
 
 void UWarriorGameInstance::Init()
