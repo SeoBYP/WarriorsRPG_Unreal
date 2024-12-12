@@ -425,6 +425,6 @@ void UInventoryComponent::PrintContents()
 {
 	for(int i = 0; i < Contents.Num(); i++)
 	{
-		Debug::DebugLog(FString::Printf(TEXT("%d : %s = %d"),i,*Contents[i].ItemID.ToString(),Contents[i].Quantity));
+		Debug::Log(FString::Printf(TEXT("%d : %s = %d"),i,*Contents[i].ItemID.ToString(),Contents[i].Quantity));
 	}
 }

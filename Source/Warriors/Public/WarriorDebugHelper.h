@@ -2,7 +2,7 @@
 
 namespace Debug
 {
-	static void DebugLog(const FString& Msg, const FColor& Color = FColor::Green,int32 InKey = -1)
+	static void Log(const FString& Msg, const FColor& Color = FColor::Green,int32 InKey = -1)
 	{
 		if(GEngine)
 		{
@@ -11,7 +11,7 @@ namespace Debug
 		}
 	}
 
-	static void DebugLog(const FString& FloatTitle,float FloatValueToPrint, const FColor& Color = FColor::Green,int32 InKey =-1)
+	static void Log(const FString& FloatTitle,float FloatValueToPrint, const FColor& Color = FColor::Green,int32 InKey =-1)
 	{
 		if(GEngine)
 		{

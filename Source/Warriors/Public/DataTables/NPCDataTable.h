@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "WorldNPCDataTable.generated.h"
+#include "NPCDataTable.generated.h"
 
 UENUM(BlueprintType, meta = (ScriptName="NPCType"))
 enum class ENPCType: uint8
@@ -25,7 +25,7 @@ enum class ENPCSubType : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FWorldNPCDataTable : public FTableRowBase
+struct FNPCDataTable : public FTableRowBase
 {
 	GENERATED_BODY()
 

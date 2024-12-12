@@ -10,11 +10,11 @@ void UWarriorHeroHUD::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	if(IDialogueInterface* DialogueInterface = Cast<IDialogueInterface>(GetOwningPlayerPawn()))
-	{
-		if(UHeroDialogueComponent* HeroDialogueComponent = DialogueInterface->GetHeroDialogueComponent())
-		{
-			BP_OnOwningHeroHUDDialogueInitialized(HeroDialogueComponent);
-		}
-	}
+	// if(IDialogueInterface* DialogueInterface = Cast<IDialogueInterface>(GetOwningPlayerPawn()))
+	// {
+	// 	if(UHeroDialogueComponent* HeroDialogueComponent = DialogueInterface->GetHeroDialogueComponent())
+	// 	{
+	// 		BP_OnOwningHeroHUDDialogueInitialized(HeroDialogueComponent);
+	// 	}
+	// }
 }

@@ -21,6 +21,7 @@
 #include "Components/Dialogue/HeroDialogueComponent.h"
 #include "Components/Interaction/InteractorComponent.h"
 #include "Components/Inventory/InventoryComponent.h"
+#include "Components/Quest/QuestLogComponent.h"
 #include "Components/UI/HeroUIComponent.h"
 #include "GameModes/WarriorsBaseGameMode.h"
 
@@ -50,9 +51,10 @@ AWarriorHeroCharacter::AWarriorHeroCharacter()
 
 	HeroCombatComponent = CreateDefaultSubobject<UHeroCombatComponent>(TEXT("HeroCombatComponent"));
 	HeroUIComponent = CreateDefaultSubobject<UHeroUIComponent>(TEXT("HeroUIComponent"));
-	HeroDialogueComponent = CreateDefaultSubobject<UHeroDialogueComponent>(TEXT("HeroDialogueComponent"));
+	//HeroDialogueComponent = CreateDefaultSubobject<UHeroDialogueComponent>(TEXT("HeroDialogueComponent"));
 	InteractorComponent = CreateDefaultSubobject<UInteractorComponent>(TEXT("InteractorComponent"));
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+	QuestLogComponent = CreateDefaultSubobject<UQuestLogComponent>(TEXT("QuestLogComponent"));
 }
 
 UPawnCombatComponent* AWarriorHeroCharacter::GetPawnCombatComponent() const
@@ -70,10 +72,10 @@ UHeroUIComponent* AWarriorHeroCharacter::GetHeroUIComponent() const
 	return HeroUIComponent;
 }
 
-UHeroDialogueComponent* AWarriorHeroCharacter::GetHeroDialogueComponent() const
-{
-	return HeroDialogueComponent;
-}
+// UHeroDialogueComponent* AWarriorHeroCharacter::GetHeroDialogueComponent() const
+// {
+// 	return HeroDialogueComponent;
+// }
 
 void AWarriorHeroCharacter::PossessedBy(AController* NewController)
 {
@@ -104,7 +106,7 @@ void AWarriorHeroCharacter::PossessedBy(AController* NewController)
 					break;
 				}
 			}
-			Debug::DebugLog(TEXT("Current Game Difficulty : %f"),AbilityApplyLevel);
+			Debug::Log(TEXT("Current Game Difficulty : %f"),AbilityApplyLevel);
 			LoadedData->GiveToAbilitySystemComponent(WarriorsAbilitySystemComponent,AbilityApplyLevel);
 		}
 	}
@@ -170,8 +172,8 @@ void AWarriorHeroCharacter::Input_Move(const FInputActionValue& InputActionValue
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
 
-	if(HeroDialogueComponent)
-		HeroDialogueComponent->DialogueInteractCheck(FollowCamera);
+	// if(HeroDialogueComponent)
+	// 	HeroDialogueComponent->DialogueInteractCheck(FollowCamera);
 }
 
 void AWarriorHeroCharacter::Input_Look(const FInputActionValue& InputActionValue)

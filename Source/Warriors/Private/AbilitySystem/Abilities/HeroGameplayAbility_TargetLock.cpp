@@ -114,7 +114,7 @@ void UHeroGameplayAbility_TargetLock::TryLockOnTarget()
 	if (AvailableActorsToLock.IsEmpty())
 	{
 		CancelTargetLockAbility();
-		Debug::DebugLog(TEXT("AvailableActorsToLock is Empty"));
+		Debug::Log(TEXT("AvailableActorsToLock is Empty"));
 		return;
 	}
 

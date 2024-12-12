@@ -21,7 +21,7 @@ void UPawnCombatComponent::RegisterSpawnedWeapon(FGameplayTag InWeaponTagToRegis
 		CurrentEquippedWeaponTag = InWeaponTagToRegister;
 	}
 	const FString WeaponString = FString::Printf( TEXT("A Weapon named : %s has been registered using the tag %s"),*InWeaponToRegister->GetName(),*InWeaponTagToRegister.ToString());
-	Debug::DebugLog(WeaponString);
+	Debug::Log(WeaponString);
 }
 
 // 캐릭터가 소지한 특정 태그의 무기를 반환하는 함수

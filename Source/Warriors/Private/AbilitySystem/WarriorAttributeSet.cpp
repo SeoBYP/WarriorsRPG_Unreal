@@ -89,7 +89,7 @@ void UWarriorAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffec
 
 
 		const FString DebugString = FString::Printf(TEXT("Current health = %f"), NewCurrentHealth);
-		Debug::DebugLog(DebugString);
+		Debug::Log(DebugString);
 
 		//Notify The UI
 		PawnUIComponent->OnCurrentHealthChanged.Broadcast(GetCurrentHealth() / GetMaxHealth());

@@ -11,6 +11,7 @@
 #include "Interfaces/DialogueInterface.h"
 #include "WarriorHeroCharacter.generated.h"
 
+class UQuestLogComponent;
 class UInventoryComponent;
 class UInteractorComponent;
 class UHeroDialogueComponent;class UHeroUIComponent;
@@ -42,8 +43,6 @@ public:
 	virtual UHeroUIComponent* GetHeroUIComponent() const override;
 	//~ End IPawnUIInterface Interface
 	
-	virtual UHeroDialogueComponent* GetHeroDialogueComponent() const override;
-	
 protected:
 	//~ Begin APawn Interface
 	virtual void PossessedBy(AController* NewController) override;
@@ -67,14 +66,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category="Combat", meta=(AllowPrivateAccess="true"))
 	UHeroUIComponent* HeroUIComponent;
 	
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Dialogue", meta=(AllowPrivateAccess="true"))
-	UHeroDialogueComponent* HeroDialogueComponent;
+	// UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Dialogue", meta=(AllowPrivateAccess="true"))
+	// UHeroDialogueComponent* HeroDialogueComponent;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Interaction", meta=(AllowPrivateAccess="true"))
 	UInteractorComponent* InteractorComponent;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Inventory", meta=(AllowPrivateAccess="true"))
 	UInventoryComponent* InventoryComponent;
+
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Quest", meta=(AllowPrivateAccess="true"))
+	UQuestLogComponent* QuestLogComponent;
 #pragma endregion
 
 #pragma region Inputs
@@ -109,4 +111,5 @@ public:
 	FORCEINLINE UHeroCombatComponent* GetHeroCombatComponent() const { return HeroCombatComponent; }
 	FORCEINLINE UInteractorComponent* GetInteractorComponent() const {return InteractorComponent;}
 	FORCEINLINE UInventoryComponent* GetInventoryComponent() const {return InventoryComponent;}
+	FORCEINLINE UQuestLogComponent* GetQuestLogComponent() const {return QuestLogComponent;}
 };

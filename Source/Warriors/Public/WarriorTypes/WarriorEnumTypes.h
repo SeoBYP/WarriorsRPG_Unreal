@@ -50,12 +50,3 @@ enum class EWarriorInputMode : uint8{
 	GameOnly,
 	UIOnly,
 };
-
-UENUM(BlueprintType)
-enum class EObjectiveType : uint8
-{
-	Location,
-	Kill,
-	Interact,
-	Collect,
-};

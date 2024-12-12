@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "SaveGame/InventorySaveData.h"
 #include "SaveGame/LevelSaveData.h"
+#include "SaveGame/QuestSaveData.h"
 #include "Subsystems/Subsystem.h"
 #include "SaveLoadSubSystem.generated.h"
 
@@ -25,16 +26,35 @@ protected:
 	UInventorySaveData* InventorySaveData;
 
 	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess=true))
+	UQuestSaveData* QuestSaveData;
+	
+	UPROPERTY(BlueprintReadOnly,meta=(AllowPrivateAccess=true))
 	ULevelSaveData* LevelSaveData;
 	
 private:
 	FString InventorySaveDataSlotName = "InventorySaveData";
-	
+	FString QuestSaveDataSlotName = "QuestSaveData";
 	void TryLoadAllSaveData();
 
 public:
 	UFUNCTION(BlueprintCallable)
+	void SaveQuestDetails(AQuestBase* Quest);
+
+	UFUNCTION(BlueprintCallable)
+	void LoadQuests(UQuestLogComponent* InQuestLogComponent);
+
+	UFUNCTION(BlueprintCallable)
+	void SaveQuestLog(UQuestLogComponent* InQuestLogComponent);
+	
+public:
+	UFUNCTION(BlueprintCallable)
 	void SaveAllSaveData();
+
+	UFUNCTION(BlueprintCallable)
+	void TryLoadQuestSaveData();
+
+	UFUNCTION(BlueprintCallable)
+	void SaveQuestSaveData();
 	
 	UFUNCTION(BlueprintCallable)
 	void TryLoadInventorySaveData();
@@ -48,6 +68,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SaveLevelSaveData();
 	
-	FORCEINLINE UInventorySaveData* GetInventorySaveData() { return InventorySaveData; }
-	FORCEINLINE ULevelSaveData* GetLevelSaveData() { return LevelSaveData; }
+	FORCEINLINE UInventorySaveData* GetInventorySaveData() const { return InventorySaveData; }
+	FORCEINLINE ULevelSaveData* GetLevelSaveData() const { return LevelSaveData; }
+	FORCEINLINE UQuestSaveData* GetQuestSaveData() const { return QuestSaveData; }
 };

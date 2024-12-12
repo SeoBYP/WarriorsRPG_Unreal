@@ -49,7 +49,7 @@ void UInteractorComponent::SetDetectionActive(const bool bNewActive)
 	APawn* Pawn = Cast<APawn>(GetOwner()); // 소유자가 Pawn인지 확인
 	if (!IsValid(Pawn) || !Pawn->IsLocallyControlled()) // 유효하지 않거나 제어되지 않는 경우
 	{
-		Debug::DebugLog(TEXT("제어되지 않는 캐릭터에서 상호작용을 토글하려고 시도했는데, 이로 인해 충돌이 발생할 수 있습니다. 참고: 플레이어 캐릭터가 아닌 청사진에 상호작용 컴포넌트를 추가해서는 안 됩니다."));
+		Debug::Log(TEXT("제어되지 않는 캐릭터에서 상호작용을 토글하려고 시도했는데, 이로 인해 충돌이 발생할 수 있습니다. 참고: 플레이어 캐릭터가 아닌 청사진에 상호작용 컴포넌트를 추가해서는 안 됩니다."));
 		bDetectionActive = false;
 		return;
 	}
@@ -57,7 +57,7 @@ void UInteractorComponent::SetDetectionActive(const bool bNewActive)
 	APlayerController* PlayerController = Cast<APlayerController>(Pawn->GetController());
 	if (!IsValid(PlayerController)) // 플레이어 컨트롤러가 유효하지 않으면 비활성화
 	{
-		Debug::DebugLog(TEXT("제어되지 않는 캐릭터에서 상호작용을 토글하려고 시도했는데, 이로 인해 충돌이 발생할 수 있습니다. 참고: 플레이어 캐릭터가 아닌 청사진에 상호작용 컴포넌트를 추가해서는 안 됩니다."));
+		Debug::Log(TEXT("제어되지 않는 캐릭터에서 상호작용을 토글하려고 시도했는데, 이로 인해 충돌이 발생할 수 있습니다. 참고: 플레이어 캐릭터가 아닌 청사진에 상호작용 컴포넌트를 추가해서는 안 됩니다."));
 		bDetectionActive = false;
 		return;
 	}

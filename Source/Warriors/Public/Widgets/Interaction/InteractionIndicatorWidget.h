@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Interfaces/InteractionInterface.h"
-#include "InteractionIndicator.generated.h"
+#include "InteractionIndicatorWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class WARRIORS_API UInteractionIndicator : public UUserWidget,public IInteractionInterface
+class WARRIORS_API UInteractionIndicatorWidget : public UUserWidget,public IInteractionInterface
 {
 	GENERATED_BODY()
 

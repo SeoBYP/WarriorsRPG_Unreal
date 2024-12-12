@@ -17,7 +17,7 @@ AWarriorAIController::AWarriorAIController(const FObjectInitializer& ObjectIniti
 {
 	if(UCrowdFollowingComponent* CrowdComp = Cast<UCrowdFollowingComponent>(GetPathFollowingComponent()))
 	{
-		Debug::DebugLog(TEXT("CrowdFollowingComponent is Valid"));
+		Debug::Log(TEXT("CrowdFollowingComponent is Valid"));
 	}
 
 	AISenseConfig_Sight = CreateDefaultSubobject<UAISenseConfig_Sight>("EnemyAISenseConfig_Sight");

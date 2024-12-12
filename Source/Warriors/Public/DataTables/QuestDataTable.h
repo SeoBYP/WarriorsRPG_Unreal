@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Quest/StageDetails.h"
 #include "WarriorTypes/WarriorStructTypes.h"
 #include "QuestDataTable.generated.h"
 
@@ -17,6 +18,9 @@ struct FQuestDataTable: public FTableRowBase
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FText QuestName;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	FText NPCID;
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FText LogDescription;

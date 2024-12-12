@@ -18,6 +18,6 @@ class WARRIORS_API UWarriorHeroHUD : public UWarriorWidgetBase
 protected:
 	virtual void NativeOnInitialized() override;
 	
-	UFUNCTION(BlueprintImplementableEvent,meta=(DisplayName = "On Owning Hero HUD Dialogue Initialized"))
-	void BP_OnOwningHeroHUDDialogueInitialized(UHeroDialogueComponent* OwningHeroDialogueComponent);
+	// UFUNCTION(BlueprintImplementableEvent,meta=(DisplayName = "On Owning Hero HUD Dialogue Initialized"))
+	// void BP_OnOwningHeroHUDDialogueInitialized(UHeroDialogueComponent* OwningHeroDialogueComponent);
 };

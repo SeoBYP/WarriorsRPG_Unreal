@@ -33,7 +33,7 @@ void AChest::BeginPlay()
 	{
 		InteractableComponent->SetInteractableDataBasedOnDataTable(InteractableDataTable.Get(), InteractableName);
 	}
-	//InventoryComponent->LoadInventory();
+	
 }
 
 // Called every frame
