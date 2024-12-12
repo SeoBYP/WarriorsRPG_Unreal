@@ -1,6 +1,6 @@
 ﻿// Vince Petrelli All Rights Reserved
 
 
-#include "Widgets/InteractionIndicator.h"
+#include "Widgets/Interaction/InteractionIndicatorWidget.h"
 
 #include "WarriorDebugHelper.h"

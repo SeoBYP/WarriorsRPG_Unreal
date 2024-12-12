@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WarriorWidgetBase.h"
+#include "Widgets/WarriorWidgetBase.h"
 #include "DialogueWidget.generated.h"
 
 /**
